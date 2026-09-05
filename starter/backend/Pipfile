@@ -4,10 +4,7 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
-flask = "*"
-uwsgi = "==2.0.24"
-flask-cors = "*"
-pytest = "*"
+uwsgi = "==2.0.21"
 
 [dev-packages]
 black = "*"
