@@ -3,11 +3,7 @@ FROM python:3.10-slim
 RUN adduser --disabled-password --gecos "" app
 
 RUN apt-get update && \
-    apt-get install -y \
-    build-essential \
-    libpcre3 \
-    libpcre3-dev \
-    && \
+    apt-get install -y build-essential && \
     rm -rf /var/lib/apt/lists/* && \
     pip install pipenv
 
