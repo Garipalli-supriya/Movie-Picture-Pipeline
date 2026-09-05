@@ -21,16 +21,14 @@ jobs:
         with:
           python-version: '3.10'
 
-      - name: Install Pipenv
-        run: pip install pipenv
-
       - name: Install dependencies
         working-directory: starter/backend
-        run: pipenv install --dev
+        run: |
+          pip install flask flask-cors pytest flake8 black coverage
 
       - name: Run lint
         working-directory: starter/backend
-        run: pipenv run lint
+        run: flake8
 
   test:
     runs-on: ubuntu-latest
@@ -44,16 +42,14 @@ jobs:
         with:
           python-version: '3.10'
 
-      - name: Install Pipenv
-        run: pip install pipenv
-
       - name: Install dependencies
         working-directory: starter/backend
-        run: pipenv install --dev
+        run: |
+          pip install flask flask-cors pytest flake8 black coverage
 
       - name: Run tests
         working-directory: starter/backend
-        run: pipenv run test
+        run: pytest -v
 
   build:
     runs-on: ubuntu-latest
