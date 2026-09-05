@@ -91,7 +91,7 @@ jobs:
           docker push ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.us-east-1.amazonaws.com/backend:${{ github.sha }}
 
       - name: Update kubeconfig
-        run: aws eks update-kubeconfig --region us-east-1 --name cluster
+        run: aws eks update-kubeconfig --region us-east-1 --name backend-cluster
 
       - name: Deploy to EKS
         working-directory: starter/backend
