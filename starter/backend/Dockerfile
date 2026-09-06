@@ -19,4 +19,4 @@ WORKDIR /app
 
 USER app
 
-CMD ["uwsgi", "--http", "0.0.0.0:5000", "--wsgi-file", "app.py"]
+CMD ["uwsgi", "--http", "0.0.0.0:5000", "--module", "__init__:app"]
