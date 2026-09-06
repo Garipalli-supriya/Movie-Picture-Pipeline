@@ -6,7 +6,8 @@ on:
       - main
     paths:
       - "starter/frontend/**"
-      - ".github/workflows/frontend_cd.yaml"
+      - ".github/workflows/frontend-cd.yaml"
+  workflow_dispatch:
 
 jobs:
   build-and-deploy:
@@ -26,17 +27,20 @@ jobs:
       - name: Login to Amazon ECR
         uses: aws-actions/amazon-ecr-login@v2
 
-      - name: Build frontend image
+      - name: Build and push Docker image
         working-directory: starter/frontend
         run: |
-          docker build -t frontend:latest .
+          docker build \
+            --build-arg REACT_APP_MOVIE_API_URL="${{ secrets.REACT_APP_MOVIE_API_URL }}" \
+            -t ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.us-east-1.amazonaws.com/frontend:${{ github.sha }} .
+          docker push ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.us-east-1.amazonaws.com/frontend:${{ github.sha }}
 
-      - name: Tag frontend image
-        run: |
-          docker tag frontend:latest \
-            081162991116.dkr.ecr.us-east-1.amazonaws.com/frontend:latest
+      - name: Update kubeconfig
+        run: aws eks update-kubeconfig --region us-east-1 --name backend-cluster
 
-      - name: Push frontend image
+      - name: Deploy to EKS
+        working-directory: starter/frontend
         run: |
-          docker push \
-            081162991116.dkr.ecr.us-east-1.amazonaws.com/frontend:latest
+          kubectl apply -k k8s/
+          kubectl set image deployment/frontend frontend=${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.us-east-1.amazonaws.com/frontend:${{ github.sha }}
+          kubectl rollout status deployment/frontend
