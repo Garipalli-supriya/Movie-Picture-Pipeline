@@ -13,10 +13,10 @@ COPY Pipfile /app
 
 RUN cd /app && pipenv install --system --skip-lock
 
-COPY . /app
+COPY . /app/backend
 
 WORKDIR /app
 
 USER app
 
-CMD ["uwsgi", "--http", "0.0.0.0:5000", "--module", "__init__:app"]
+CMD ["uwsgi", "--http", "0.0.0.0:5000", "--module", "backend:app"]
